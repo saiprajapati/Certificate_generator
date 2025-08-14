@@ -48,12 +48,12 @@
             color: #ccd6f6;
         }
         #certificate {
-            background-image: url('Cert.png');
+            background-image: url('http://googleusercontent.com/file_content/0');
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
             width: 100%;
-            aspect-ratio: 1.414 / 1; /* A4 paper aspect ratio */
+            aspect-ratio: 1.414 / 1;
             position: relative;
             display: flex;
             justify-content: center;
@@ -65,14 +65,14 @@
             left: 50%;
             transform: translate(-50%, -50%);
             font-family: 'Roboto Mono', monospace;
-            /* --- RESPONSIVE FONT SIZE FIX --- */
-            /* This will keep the font between 12px and 24px, scaling with the screen */
-            font-size: clamp(12px, 3.5vw, 24px);
             font-weight: 700;
             color: #1e293b;
             text-align: center;
             width: 80%;
             line-height: 1.2;
+            /* --- ADVANCED RESPONSIVE FONT SIZE --- */
+            /* Default for very small phones */
+            font-size: 3.8vw;
         }
         #hackerContainer h1, #hackerContainer h2 {
             font-family: 'Chakra Petch', sans-serif;
@@ -97,6 +97,26 @@
         }
         .message-box.success {
             background-color: #28a745;
+        }
+
+        /* --- More Specific Breakpoints for Font Size --- */
+        /* For larger phones (e.g., iPhone Plus/Max, larger Androids) */
+        @media (min-width: 400px) {
+            #participantName {
+                font-size: 3.5vw;
+            }
+        }
+        /* For small tablets and very large phones in landscape */
+        @media (min-width: 640px) {
+            #participantName {
+                font-size: 2.8vw;
+            }
+        }
+        /* For standard desktops and larger tablets */
+        @media (min-width: 800px) {
+            #participantName {
+                font-size: 24px; /* Fixed size for large screens */
+            }
         }
     </style>
 </head>
