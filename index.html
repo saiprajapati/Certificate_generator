@@ -1,53 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MERNxAI Certificate Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Mono:wght@400;700&family=Chakra+Petch:wght@700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Mono:wght@400;700&family=Chakra+Petch:wght@700&display=swap"
+        rel="stylesheet">
     <style>
+        :root {
+            /* Default or placeholder colors - will be overwritten by JS */
+            --background-color: #0a192f;
+            --card-color: #112240;
+            --border-color: #233554;
+            --text-color-light: #ccd6f6;
+            --text-color-dark: #8892b0;
+            --accent-color: #64ffda;
+            --accent-color-hover: #0a192f;
+            --accent-border-color: #64ffda;
+            --accent-bg-transparent: #64ffda1a;
+            --hacker-text-color: #ff0000;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0a192f;
-            color: #ccd6f6;
+            background-color: var(--background-color);
+            color: var(--text-color-light);
+            overflow-x: hidden;
+            transition: background-color 0.5s ease;
         }
+
         .container {
             max-width: 900px;
             margin: 0 auto;
             padding: 0 10px;
         }
+
         .card {
-            background-color: #112240;
-            border: 1px solid #233554;
+            background-color: var(--card-color);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
-            box-shadow: 0 10px 30px -15px rgba(2,12,27,0.7);
+            box-shadow: 0 10px 30px -15px rgba(2, 12, 27, 0.7);
+            animation: fadeIn 1s ease-in-out;
+            transition: background-color 0.5s ease, border-color 0.5s ease;
         }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .btn {
-            background-color: #64ffda;
-            color: #0a192f;
-            transition: all 0.25s cubic-bezier(0.645,0.045,0.355,1);
+            background-color: var(--accent-color);
+            color: var(--background-color);
+            transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
             font-weight: bold;
             border-radius: 0.375rem;
         }
+
         .btn:hover {
-            background-color: #0a192f;
-            color: #64ffda;
-            outline: 1px solid #64ffda;
+            background-color: var(--accent-color-hover);
+            color: var(--accent-color);
+            outline: 1px solid var(--accent-border-color);
         }
+
         .btn-secondary {
             background-color: transparent;
-            color: #64ffda;
-            outline: 1px solid #64ffda;
+            color: var(--accent-color);
+            outline: 1px solid var(--accent-border-color);
         }
+
         .btn-secondary:hover {
-            background-color: #64ffda1a;
+            background-color: var(--accent-bg-transparent);
         }
+
         input {
-            background-color: #233554;
-            border: 1px solid #303C55;
-            color: #ccd6f6;
+            background-color: var(--border-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color-light);
+            transition: all 0.2s;
         }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 1px var(--accent-color);
+        }
+
         #certificate {
             background-image: url('Cert.png');
             background-size: contain;
@@ -62,6 +110,7 @@
             align-items: center;
             margin: 0 auto;
         }
+
         #participantName {
             position: absolute;
             top: 46%;
@@ -77,13 +126,44 @@
             overflow-wrap: break-word;
             font-size: clamp(14px, 4vw, 28px);
         }
-        .hacker-text h1, .hacker-text h2 {
+
+        #hackerContainer h1,
+        #hackerContainer h2,
+        #promo h1,
+        #promo h2,
+        .modal-content h3,
+        .text-green-300 {
             font-family: 'Chakra Petch', sans-serif;
-            text-shadow: 0 0 5px #64ffda, 0 0 10px #64ffda;
+            text-shadow: 0 0 5px var(--accent-color), 0 0 10px var(--accent-color);
+            color: var(--accent-color);
+            transition: color 0.5s ease, text-shadow 0.5s ease;
         }
+
+        .marquee-content a.text-green-300 {
+            color: var(--accent-color);
+        }
+
+        .hacker-text {
+            color: var(--hacker-text-color);
+            text-shadow: 0 0 5px var(--hacker-text-color), 0 0 10px var(--hacker-text-color);
+        }
+
+        .text-slate-200 {
+            color: var(--text-color-light);
+        }
+
+        .text-slate-300 {
+            color: var(--text-color-light);
+        }
+
+        .text-slate-400 {
+            color: var(--text-color-dark);
+        }
+
         .hidden {
             display: none;
         }
+
         .message-box {
             position: fixed;
             top: 20px;
@@ -95,75 +175,183 @@
             opacity: 0;
             transition: opacity 0.5s;
         }
+
         .message-box.show {
             opacity: 1;
         }
+
         .message-box.success {
             background-color: #28a745;
         }
+
         .message-box.error {
             background-color: #dc3545;
         }
 
-        /* --- Modal Styles (NEW) --- */
-        .modal-overlay {
+        /* Marquee Strip */
+        .marquee-container {
+            width: 100%;
+            overflow: hidden;
+            background-color: var(--accent-bg-transparent);
+            border-bottom: 1px solid var(--accent-border-color);
+            padding: 8px 0;
+            margin-bottom: 24px;
+            transition: background-color 0.5s ease, border-color 0.5s ease;
+        }
+
+        .marquee-content {
+            display: inline-block;
+            white-space: nowrap;
+            padding-left: 100%;
+            animation: marquee 20s linear infinite;
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(0%);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        /* Footer Styling */
+        footer {
+            margin-top: 48px;
+            padding: 24px 0;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--text-color-dark);
+            font-size: 0.875rem;
+            transition: border-color 0.5s ease, color 0.5s ease;
+        }
+
+        /* Modal Styles */
+        .modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(10, 25, 47, 0.85);
+            background-color: rgba(0, 0, 0, 0.8);
             display: flex;
-            align-items: center;
             justify-content: center;
-            z-index: 50;
-        }
-        .modal-content {
-            position: relative;
-            max-width: 500px;
-            width: 90%;
-        }
-        .modal-close-btn {
-            position: absolute;
-            top: 0.5rem;
-            right: 1rem;
-            font-size: 2rem;
-            color: #ccd6f6;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-        .modal-close-btn:hover {
-            color: #64ffda;
+            align-items: center;
+            z-index: 200;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
         }
 
-        /* --- More Specific Breakpoints for Font Size --- */
+        .modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: var(--card-color);
+            padding: 2rem;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s ease, background-color 0.5s ease;
+        }
+
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-content h3 {
+            font-family: 'Chakra Petch', sans-serif;
+            text-shadow: 0 0 5px var(--accent-color), 0 0 10px var(--accent-color);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-color-dark);
+        }
+
+        /* Responsive adjustments for overall layout */
+        @media (min-width: 768px) {
+            .container {
+                display: grid;
+                grid-template-columns: 2fr 1fr;
+                gap: 2rem;
+                align-items: start;
+            }
+
+            #formContainer {
+                grid-column: 1 / 2;
+            }
+
+            #promo {
+                grid-column: 2 / 3;
+            }
+
+            #certificateContainer,
+            #hackerContainer {
+                grid-column: 1 / 3;
+            }
+        }
+
         @media (max-width: 360px) {
             #participantName {
                 font-size: 12px;
                 width: 90%;
                 line-height: 1.0;
             }
+
             #certificate {
                 margin: 0 -10px;
             }
         }
+
         @media (min-width: 361px) and (max-width: 480px) {
-            #participantName { font-size: 14px; width: 85%; }
+            #participantName {
+                font-size: 14px;
+                width: 85%;
+            }
         }
+
         @media (min-width: 481px) and (max-width: 768px) {
-            #participantName { font-size: 18px; width: 80%; }
+            #participantName {
+                font-size: 18px;
+                width: 80%;
+            }
         }
+
         @media (min-width: 769px) and (max-width: 1024px) {
-            #participantName { font-size: 22px; width: 75%; }
+            #participantName {
+                font-size: 22px;
+                width: 75%;
+            }
         }
+
         @media (min-width: 1025px) {
-            #participantName { font-size: 24px; width: 70%; }
+            #participantName {
+                font-size: 24px;
+                width: 70%;
+            }
         }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4">
 
-    <div class="container w-full">
+<body class="flex flex-col min-h-screen p-4">
+
+    <div class="marquee-container">
+        <div id="marqueeContent" class="marquee-content font-bold text-lg text-slate-300">
+        </div>
+    </div>
+
+    <main class="container w-full flex-grow">
         <div id="formContainer" class="card p-6 md:p-8">
             <div class="text-center mb-6">
                 <h1 class="text-3xl md:text-4xl font-bold text-slate-200">MERNxAI Hackathon</h1>
@@ -172,11 +360,15 @@
             <form id="certificateForm" class="space-y-4">
                 <div>
                     <label for="name" class="block text-sm font-medium text-slate-300 mb-1">Participant Name</label>
-                    <input type="text" id="name" name="name" class="w-full p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400" placeholder="e.g., Your Name" required>
+                    <input type="text" id="name" name="name"
+                        class="w-full p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
+                        placeholder="e.g., Your Name" required>
                 </div>
                 <div>
                     <label for="regNo" class="block text-sm font-medium text-slate-300 mb-1">Registration Number</label>
-                    <input type="text" id="regNo" name="regNo" class="w-full p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400" placeholder="e.g., 23BCExxxxx" required>
+                    <input type="text" id="regNo" name="regNo"
+                        class="w-full p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
+                        placeholder="e.g., 23BCExxxxx" required>
                 </div>
                 <button type="submit" class="w-full btn py-3 px-4">
                     Generate Certificate
@@ -184,39 +376,86 @@
             </form>
         </div>
 
-        <div id="certificateContainer" class="card mt-8 p-1 sm:p-2 md:p-4 hidden">
-             <div id="certificate">
-                 <div id="participantName"></div>
-             </div>
-             <div class="flex flex-col sm:flex-row items-center justify-center mt-2 sm:mt-4 space-y-2 sm:space-y-0 sm:space-x-4 px-2">
-                 <button id="downloadBtn" class="w-full sm:w-auto btn py-2 px-4 sm:px-6 text-sm sm:text-base">Download Certificate</button>
-                 <button id="backBtn" class="w-full sm:w-auto btn-secondary py-2 px-4 sm:px-6 text-sm sm:text-base">Generate Another</button>
-             </div>
+        <div id="promo" class="card p-6 md:p-8 text-center">
+            <h2 class="text-2xl md:text-3xl font-bold text-green-300 mb-4">DAWN OF CODE</h2>
+            <p class="text-slate-300 mt-2 text-lg md:text-xl">
+                Ready to prove your skills? Join the ultimate coding battleground!
+            </p>
+            <div class="my-6">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=YOUR_EVENT_URL_HERE"
+                    alt="QR Code for Dawn of Code event" class="mx-auto rounded-lg border-4 border-green-300 p-1"
+                    onerror="this.onerror=null; this.src='https://placehold.co/150x150/0a192f/64ffda?text=Event+QR';">
+            </div>
+            <a href="#" id="promoEventLink" class="btn inline-block py-3 px-8 text-lg">Register Now</a>
         </div>
-    </div>
 
-    <div id="eventModalOverlay" class="modal-overlay hidden">
-        <div class="modal-content card p-6 md:p-8 text-center hacker-text">
-            <span id="modalCloseBtn" class="modal-close-btn">&times;</span>
-            <h1 class="text-3xl md:text-4xl font-bold" style="color: #64ffda;">Incredible Performance!</h1>
-            <h2 class="text-2xl md:text-3xl font-bold text-green-300 mt-4">Now, A New Challenge Awaits...</h2>
-            <p class="text-slate-300 mt-6 text-lg">
-                Your skill was undeniable in the MERNxAI Hackathon. We invite you to bring that talent to a new battleground.
+        <div id="certificateContainer" class="card mt-8 p-1 sm:p-2 md:p-4 hidden">
+            <div id="certificate">
+                <div id="participantName"></div>
+            </div>
+            <div
+                class="flex flex-col sm:flex-row items-center justify-center mt-2 sm:mt-4 space-y-2 sm:space-y-0 sm:space-x-4 px-2">
+                <button id="downloadBtn" class="w-full sm:w-auto btn py-2 px-4 sm:px-6 text-sm sm:text-base">Download
+                    Certificate</button>
+                <button id="backBtn"
+                    class="w-full sm:w-auto btn-secondary py-2 px-4 sm:px-6 text-sm sm:text-base">Generate
+                    Another</button>
+            </div>
+        </div>
+
+        <div id="hackerContainer" class="card p-6 md:p-8 text-center hidden">
+            <h1 class="text-4xl md:text-5xl font-bold hacker-text">
+                ACCESS DENIED</h1>
+            <h2 class="text-2xl md:text-3xl font-bold text-green-300 mt-4">Or is it an invitation?</h2>
+            <p class="text-slate-300 mt-6 text-lg md:text-xl">
+                Cute. You tried to hack our certificate system. Your attempt didn't go unnoticed.
+                But instead of sounding the alarms, we're intrigued.
+            </p>
+            <p class="text-slate-100 font-bold mt-4 text-xl md:text-2xl">
+                We challenge you to bring your 'skills' to a real battleground.
             </p>
             <h2 class="text-3xl md:text-4xl font-bold text-green-300 my-6">DAWN OF CODE</h2>
-            <div class="my-4">
-                <img id="eventQrCode" src="" alt="QR Code for Dawn of Code event" class="mx-auto rounded-lg border-4 border-green-300 p-1"
-                     onerror="this.onerror=null; this.src='https://placehold.co/150x150/0a192f/64ffda?text=Event+QR';">
+            <div class="my-6">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=YOUR_EVENT_URL_HERE"
+                    alt="QR Code for Dawn of Code event" class="mx-auto rounded-lg border-4 border-green-300 p-1"
+                    onerror="this.onerror=null; this.src='https://placehold.co/150x150/0a192f/64ffda?text=Event+QR';">
             </div>
-            <a href="#" id="eventLink" target="_blank" rel="noopener noreferrer" class="btn inline-block py-3 px-8 text-lg">Show Us What You've Got</a>
+            <a href="#" id="hackerEventLink" class="btn inline-block py-3 px-8 text-lg">Show Us What You've Got</a>
+            <button id="tryAgainBtn" class="block mx-auto mt-4 text-slate-400 hover:text-green-300 transition">I give
+                up, take me back</button>
+        </div>
+    </main>
+
+    <div id="promoModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h3 class="text-3xl font-bold mb-4">You did it! 🎉</h3>
+            <p class="text-lg text-slate-300 mb-6">
+                Your certificate is now safe and sound. But we know a true tech enthusiast's journey never ends.
+                Ready for your next challenge?
+            </p>
+            <h2 class="text-2xl font-bold text-green-300 mb-4">DAWN OF CODE Awaits!</h2>
+            <div class="my-6">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=YOUR_EVENT_URL_HERE"
+                    alt="QR Code for Dawn of Code event" class="mx-auto rounded-lg border-4 border-green-300 p-1"
+                    onerror="this.onerror=null; this.src='https://placehold.co/150x150/0a192f/64ffda?text=Event+QR';">
+            </div>
+            <a href="#" id="modalEventLink" class="btn inline-block py-3 px-8 text-lg">Face the Challenge</a>
         </div>
     </div>
 
     <div id="messageBox" class="message-box"></div>
 
+    <footer>
+        <p class="font-bold text-base text-slate-400">
+            <span class="text-green-300">MERN MATRIX</span> - Empowering Tech Enthusiasts at VIT Bhopal University
+        </p>
+    </footer>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
         // --- Configuration ---
+
         const validRegNos = [
             "24BAI10484", "24BAI10485", "24BAI10486", "24BAI10487", "24BAI10488", "24BAI10489", "24BAI10490", "24BAI10491", "24BAI10492", "24BAI10493",
             "24BAI10494", "24BAI10495", "24BAI10496", "24BAI10497", "24BAI10498", "24BAI10499", "24BAI10500", "24BAI10501", "24BAI10502", "24BAI10503",
@@ -270,26 +509,146 @@
             '23BSA10133', '24BAI10621'
         ];
 
-        // You can change this to your actual event URL
-        const eventUrl = "https://docs.google.com/forms/d/e/1FAIpQLSeBI_ojXb927O5h4uleeklXQfYbk-irl6zMzNLHFxeXoYDFRg/viewform";
+
+        const eventUrl = "https://docs.google.com/forms/d/e/1FAIpQLSeBI_ojXb927O5h4uleeklXQfYbk-irl6zMzNLHFxeXoYDFRg/viewform ";
+
+        // New color palettes
+        const colorPalettes = [
+            // Dark Blue & Teal (Original)
+            {
+                '--background-color': '#0a192f',
+                '--card-color': '#112240',
+                '--border-color': '#233554',
+                '--text-color-light': '#ccd6f6',
+                '--text-color-dark': '#8892b0',
+                '--accent-color': '#64ffda',
+                '--accent-color-hover': '#0a192f',
+                '--accent-border-color': '#64ffda',
+                '--accent-bg-transparent': '#64ffda1a',
+                '--hacker-text-color': '#ff0000',
+            },
+            // Dark Purple & Pink
+            {
+                '--background-color': '#1a0d24',
+                '--card-color': '#2e1c40',
+                '--border-color': '#422c54',
+                '--text-color-light': '#e0d6f6',
+                '--text-color-dark': '#a892b0',
+                '--accent-color': '#e064ff',
+                '--accent-color-hover': '#1a0d24',
+                '--accent-border-color': '#e064ff',
+                '--accent-bg-transparent': '#e064ff1a',
+                '--hacker-text-color': '#ff0000',
+            },
+            // Charcoal & Bright Green
+            {
+                '--background-color': '#1a1a1a',
+                '--card-color': '#2a2a2a',
+                '--border-color': '#444444',
+                '--text-color-light': '#f0f0f0',
+                '--text-color-dark': '#a0a0a0',
+                '--accent-color': '#00ff8c',
+                '--accent-color-hover': '#1a1a1a',
+                '--accent-border-color': '#00ff8c',
+                '--accent-bg-transparent': '#00ff8c1a',
+                '--hacker-text-color': '#ff0000',
+            },
+            // Dark Brown & Gold
+            {
+                '--background-color': '#1c1713',
+                '--card-color': '#2e2720',
+                '--border-color': '#4a4035',
+                '--text-color-light': '#f5f5dc',
+                '--text-color-dark': '#bdae9c',
+                '--accent-color': '#ffc107',
+                '--accent-color-hover': '#1c1713',
+                '--accent-border-color': '#ffc107',
+                '--accent-bg-transparent': '#ffc1071a',
+                '--hacker-text-color': '#ff4d4d',
+            },
+            // Deep Ocean & Coral
+            {
+                '--background-color': '#0b2f4a',
+                '--card-color': '#164263',
+                '--border-color': '#275a7c',
+                '--text-color-light': '#f0f8ff',
+                '--text-color-dark': '#a5c0d0',
+                '--accent-color': '#ff6347',
+                '--accent-color-hover': '#0b2f4a',
+                '--accent-border-color': '#ff6347',
+                '--accent-bg-transparent': '#ff63471a',
+                '--hacker-text-color': '#ff4d4d',
+            }
+        ];
+
+        // New marquee content combinations
+        const marqueeContent = [
+            `
+            <span class="text-green-300">DAWN OF CODE</span> - Register for our next mega hackathon now!
+            <a href="${eventUrl}" class="text-green-300 underline mx-4">Register here!</a>
+            <span class="text-green-300">DAWN OF CODE</span> - A new coding challenge awaits you!
+            <a href="${eventUrl}" class="text-green-300 underline mx-4">Don't miss out!</a>
+            `,
+            `
+            <span class="text-green-300">MERN MATRIX</span> - Learn MERN stack and AI with us.
+            <a href="${eventUrl}" class="text-green-300 underline mx-4">Join our community!</a>
+            <span class="text-green-300">MERN MATRIX</span> - Elevate your coding skills to the next level.
+            <a href="${eventUrl}" class="text-green-300 underline mx-4">Find out more!</a>
+            `,
+            `
+            <span class="text-green-300">VIT BHOPAL HACKATHON</span> - Unleash your creativity and win big!
+            <a href="${eventUrl}" class="text-green-300 underline mx-4">Sign up today!</a>
+            <span class="text-green-300">VIT BHOPAL HACKATHON</span> - The future of tech starts here.
+            <a href="${eventUrl}" class="text-green-300 underline mx-4">Register now!</a>
+            `
+        ];
+
+        function applyRandomPalette() {
+            const randomPaletteIndex = Math.floor(Math.random() * colorPalettes.length);
+            const randomContentIndex = Math.floor(Math.random() * marqueeContent.length);
+
+            const palette = colorPalettes[randomPaletteIndex];
+            const content = marqueeContent[randomContentIndex];
+
+            const root = document.documentElement;
+            for (const [key, value] of Object.entries(palette)) {
+                root.style.setProperty(key, value);
+            }
+
+            const marquee = document.getElementById('marqueeContent');
+            if (marquee) {
+                marquee.innerHTML = content;
+            }
+        }
 
         // --- Element References ---
         const formContainer = document.getElementById('formContainer');
         const certificateContainer = document.getElementById('certificateContainer');
+        const hackerContainer = document.getElementById('hackerContainer');
         const certificateForm = document.getElementById('certificateForm');
         const participantNameEl = document.getElementById('participantName');
         const downloadBtn = document.getElementById('downloadBtn');
         const backBtn = document.getElementById('backBtn');
+        const tryAgainBtn = document.getElementById('tryAgainBtn');
         const messageBox = document.getElementById('messageBox');
-        
-        // --- Modal Element References (NEW) ---
-        const eventModalOverlay = document.getElementById('eventModalOverlay');
-        const modalCloseBtn = document.getElementById('modalCloseBtn');
+        const promoEl = document.getElementById('promo');
+        const promoModal = document.getElementById('promoModal');
+        const modalCloseBtn = document.querySelector('.modal-close');
 
         // --- Setup ---
-        // Set the actual links for the event in the modal
-        document.getElementById('eventQrCode').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(eventUrl)}`;
-        document.getElementById('eventLink').href = eventUrl;
+        const hackerQRImg = document.querySelector('#hackerContainer img');
+        const hackerEventLink = document.getElementById('hackerEventLink');
+        const promoQRImg = document.querySelector('#promo img');
+        const promoEventLink = document.getElementById('promoEventLink');
+        const modalEventLink = document.getElementById('modalEventLink');
+        const modalQRImg = document.querySelector('#promoModal img');
+
+        [hackerQRImg, promoQRImg, modalQRImg].forEach(img => {
+            if (img) img.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(eventUrl)}`;
+        });
+        [hackerEventLink, promoEventLink, modalEventLink].forEach(link => {
+            if (link) link.href = eventUrl;
+        });
 
         // --- Functions ---
         function showMessage(message, type = 'success') {
@@ -308,14 +667,13 @@
             const regNo = regNoInput.value.trim();
 
             if (!name || !regNo) {
-                showMessage('Please fill in all fields.', 'error'); // More specific message
                 return;
             }
 
             if (validRegNos.includes(regNo.toUpperCase())) {
                 const displayText = `${name} (${regNo})`;
                 participantNameEl.textContent = displayText;
-                
+
                 const textLength = displayText.length;
                 if (textLength > 25) {
                     participantNameEl.style.fontSize = 'clamp(10px, 3vw, 20px)';
@@ -324,15 +682,17 @@
                 } else {
                     participantNameEl.style.fontSize = 'clamp(14px, 4vw, 28px)';
                 }
-                
+
                 formContainer.classList.add('hidden');
+                promoEl.classList.add('hidden');
                 certificateContainer.classList.remove('hidden');
+                hackerContainer.classList.add('hidden');
                 showMessage('Certificate generated successfully!', 'success');
             } else {
-                // --- BEHAVIOR CHANGE ---
-                // Instead of showing a hacker screen, show an error message
-                showMessage('Invalid Registration Number. Please try again.', 'error');
-                regNoInput.focus(); // Help the user correct the input
+                formContainer.classList.add('hidden');
+                promoEl.classList.add('hidden');
+                certificateContainer.classList.add('hidden');
+                hackerContainer.classList.remove('hidden');
             }
         }
 
@@ -342,63 +702,80 @@
             const regNo = document.getElementById('regNo').value.trim();
             const filename = `Certificate-${name.replace(/[^a-zA-Z0-9]/g, '_')}-${regNo}.png`;
 
-            showMessage('Preparing your certificate...', 'success');
+            showMessage('Generating certificate image...', 'success');
 
             const isMobile = window.innerWidth < 768;
             const scale = isMobile ? 4 : 3;
 
-            html2canvas(certificateElement, { 
-                scale: scale, 
-                useCORS: true, 
+            html2canvas(certificateElement, {
+                scale: scale,
+                useCORS: true,
                 backgroundColor: null,
                 width: certificateElement.offsetWidth,
                 height: certificateElement.offsetHeight,
                 logging: false
             })
-            .then(canvas => {
-                const link = document.createElement('a');
-                link.download = filename;
-                link.href = canvas.toDataURL('image/png', 0.9);
-                link.click();
-                
-                // --- NEW ---
-                // Show the event modal after the download is triggered
-                setTimeout(() => {
-                    eventModalOverlay.classList.remove('hidden');
-                }, 500); // Small delay to make it feel smoother
-            })
-            .catch(err => {
-                console.error('Error generating canvas:', err);
-                showMessage('Error downloading certificate. Please try again.', 'error');
-            });
+                .then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = filename;
+                    link.href = canvas.toDataURL('image/png', 0.9);
+
+                    if (isMobile) {
+                        const event = new MouseEvent('click', {
+                            view: window,
+                            bubbles: true,
+                            cancelable: true
+                        });
+                        link.dispatchEvent(event);
+                    } else {
+                        link.click();
+                    }
+
+                    showMessage('Certificate downloaded successfully!', 'success');
+                    setTimeout(() => {
+                        promoModal.classList.add('show');
+                    }, 1000); // Show modal after a delay
+                })
+                .catch(err => {
+                    console.error('Error generating canvas:', err);
+                    showMessage('Error generating certificate. Please try again.', 'error');
+                });
         }
 
         function resetToForm() {
             certificateContainer.classList.add('hidden');
+            hackerContainer.classList.add('hidden');
             formContainer.classList.remove('hidden');
+            promoEl.classList.remove('hidden');
             certificateForm.reset();
             participantNameEl.style.fontSize = 'clamp(14px, 4vw, 28px)';
-        }
-
-        // --- NEW: Function to close the modal ---
-        function closeModal() {
-            eventModalOverlay.classList.add('hidden');
         }
 
         // --- Event Listeners ---
         certificateForm.addEventListener('submit', handleGenerate);
         downloadBtn.addEventListener('click', handleDownload);
         backBtn.addEventListener('click', resetToForm);
+        tryAgainBtn.addEventListener('click', resetToForm);
 
-        // --- NEW: Event listeners for the modal ---
-        modalCloseBtn.addEventListener('click', closeModal);
-        eventModalOverlay.addEventListener('click', (e) => {
-            // Close the modal if the user clicks on the dark overlay background
-            if (e.target === eventModalOverlay) {
-                closeModal();
+        // Modal close functionality
+        modalCloseBtn.addEventListener('click', () => {
+            promoModal.classList.remove('show');
+        });
+
+        // Close modal if user clicks outside of it
+        promoModal.addEventListener('click', (e) => {
+            if (e.target === promoModal) {
+                promoModal.classList.remove('show');
             }
         });
 
+        // --- Apply a random palette and marquee content when the page loads ---
+        document.addEventListener('DOMContentLoaded', () => {
+            applyRandomPalette();
+            // Start the interval for changing palette and text every 3 seconds
+            setInterval(applyRandomPalette, 3000);
+        });
     </script>
 </body>
+
 </html>
