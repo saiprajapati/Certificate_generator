@@ -36,9 +36,9 @@
             outline: 1px solid #64ffda;
         }
         .btn-secondary {
-             background-color: transparent;
-             color: #64ffda;
-             outline: 1px solid #64ffda;
+            background-color: transparent;
+            color: #64ffda;
+            outline: 1px solid #64ffda;
         }
         .btn-secondary:hover {
             background-color: #64ffda1a;
@@ -75,10 +75,9 @@
             line-height: 1.1;
             word-wrap: break-word;
             overflow-wrap: break-word;
-            /* More controlled responsive font sizing */
             font-size: clamp(14px, 4vw, 28px);
         }
-        #hackerContainer h1, #hackerContainer h2 {
+        .hacker-text h1, .hacker-text h2 {
             font-family: 'Chakra Petch', sans-serif;
             text-shadow: 0 0 5px #64ffda, 0 0 10px #64ffda;
         }
@@ -106,8 +105,38 @@
             background-color: #dc3545;
         }
 
+        /* --- Modal Styles (NEW) --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 25, 47, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+        }
+        .modal-content {
+            position: relative;
+            max-width: 500px;
+            width: 90%;
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 1rem;
+            font-size: 2rem;
+            color: #ccd6f6;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .modal-close-btn:hover {
+            color: #64ffda;
+        }
+
         /* --- More Specific Breakpoints for Font Size --- */
-        /* Enhanced mobile responsiveness */
         @media (max-width: 360px) {
             #participantName {
                 font-size: 12px;
@@ -118,44 +147,23 @@
                 margin: 0 -10px;
             }
         }
-        
-        /* For larger phones */
         @media (min-width: 361px) and (max-width: 480px) {
-            #participantName {
-                font-size: 14px;
-                width: 85%;
-            }
+            #participantName { font-size: 14px; width: 85%; }
         }
-        
-        /* For small tablets and large phones in landscape */
         @media (min-width: 481px) and (max-width: 768px) {
-            #participantName {
-                font-size: 18px;
-                width: 80%;
-            }
+            #participantName { font-size: 18px; width: 80%; }
         }
-        
-        /* For tablets and small desktops */
         @media (min-width: 769px) and (max-width: 1024px) {
-            #participantName {
-                font-size: 22px;
-                width: 75%;
-            }
+            #participantName { font-size: 22px; width: 75%; }
         }
-        
-        /* For larger screens */
         @media (min-width: 1025px) {
-            #participantName {
-                font-size: 24px;
-                width: 70%;
-            }
+            #participantName { font-size: 24px; width: 70%; }
         }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
 
     <div class="container w-full">
-        <!-- Form Section -->
         <div id="formContainer" class="card p-6 md:p-8">
             <div class="text-center mb-6">
                 <h1 class="text-3xl md:text-4xl font-bold text-slate-200">MERNxAI Hackathon</h1>
@@ -176,119 +184,112 @@
             </form>
         </div>
 
-        <!-- Certificate Display Section -->
         <div id="certificateContainer" class="card mt-8 p-1 sm:p-2 md:p-4 hidden">
              <div id="certificate">
-                <div id="participantName"></div>
-            </div>
-            <div class="flex flex-col sm:flex-row items-center justify-center mt-2 sm:mt-4 space-y-2 sm:space-y-0 sm:space-x-4 px-2">
+                 <div id="participantName"></div>
+             </div>
+             <div class="flex flex-col sm:flex-row items-center justify-center mt-2 sm:mt-4 space-y-2 sm:space-y-0 sm:space-x-4 px-2">
                  <button id="downloadBtn" class="w-full sm:w-auto btn py-2 px-4 sm:px-6 text-sm sm:text-base">Download Certificate</button>
                  <button id="backBtn" class="w-full sm:w-auto btn-secondary py-2 px-4 sm:px-6 text-sm sm:text-base">Generate Another</button>
-            </div>
+             </div>
         </div>
-
-        <!-- Hacker Challenge Section -->
-        <div id="hackerContainer" class="card p-6 md:p-8 text-center hidden">
-            <h1 class="text-4xl md:text-5xl font-bold text-red-500" style="text-shadow: 0 0 5px #f00, 0 0 10px #f00;">ACCESS DENIED</h1>
-            <h2 class="text-2xl md:text-3xl font-bold text-green-300 mt-4">Or is it an invitation?</h2>
-            <p class="text-slate-300 mt-6 text-lg md:text-xl">
-                Cute. You tried to hack our certificate system. Your attempt didn't go unnoticed.
-                But instead of sounding the alarms, we're intrigued.
-            </p>
-            <p class="text-slate-100 font-bold mt-4 text-xl md:text-2xl">
-                We challenge you to bring your 'skills' to a real battleground.
-            </p>
-            <h2 class="text-3xl md:text-4xl font-bold text-green-300 my-6">DAWN OF CODE</h2>
-            <div class="my-6">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=YOUR_EVENT_URL_HERE"
-                     alt="QR Code for Dawn of Code event"
-                     class="mx-auto rounded-lg border-4 border-green-300 p-1"
-                     onerror="this.onerror=null; this.src='https://placehold.co/150x150/0a192f/64ffda?text=Event+QR';">
-            </div>
-            <a href="#" id="eventLink" class="btn inline-block py-3 px-8 text-lg">Show Us What You've Got</a>
-            <button id="tryAgainBtn" class="block mx-auto mt-4 text-slate-400 hover:text-green-300 transition">I give up, take me back</button>
-        </div>
-
     </div>
 
-    <!-- Message Box for notifications -->
+    <div id="eventModalOverlay" class="modal-overlay hidden">
+        <div class="modal-content card p-6 md:p-8 text-center hacker-text">
+            <span id="modalCloseBtn" class="modal-close-btn">&times;</span>
+            <h1 class="text-3xl md:text-4xl font-bold" style="color: #64ffda;">Incredible Performance!</h1>
+            <h2 class="text-2xl md:text-3xl font-bold text-green-300 mt-4">Now, A New Challenge Awaits...</h2>
+            <p class="text-slate-300 mt-6 text-lg">
+                Your skill was undeniable in the MERNxAI Hackathon. We invite you to bring that talent to a new battleground.
+            </p>
+            <h2 class="text-3xl md:text-4xl font-bold text-green-300 my-6">DAWN OF CODE</h2>
+            <div class="my-4">
+                <img id="eventQrCode" src="" alt="QR Code for Dawn of Code event" class="mx-auto rounded-lg border-4 border-green-300 p-1"
+                     onerror="this.onerror=null; this.src='https://placehold.co/150x150/0a192f/64ffda?text=Event+QR';">
+            </div>
+            <a href="#" id="eventLink" target="_blank" rel="noopener noreferrer" class="btn inline-block py-3 px-8 text-lg">Show Us What You've Got</a>
+        </div>
+    </div>
+
     <div id="messageBox" class="message-box"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
         // --- Configuration ---
         const validRegNos = [
-    "24BAI10484", "24BAI10485", "24BAI10486", "24BAI10487", "24BAI10488", "24BAI10489", "24BAI10490", "24BAI10491", "24BAI10492", "24BAI10493",
-    "24BAI10494", "24BAI10495", "24BAI10496", "24BAI10497", "24BAI10498", "24BAI10499", "24BAI10500", "24BAI10501", "24BAI10502", "24BAI10503",
-    "24BAI10504", "24BAI10505", "24BAI10506", "24BAI10507", "24BAI10508", "24BAI10509", "24BAI10510", "24BAI10511", "24BAI10512", "24BAI10513",
-    "24BAI10514", "24BAI10515", "24BAI10516", "24BAI10517", "24BAI10518", "24BAI10519", "24BAI10520", "24BAI10521", "24BAI10522", "24BAI10523",
-    "24BAI10524", "24BAI10525", "24BAI10526", "24BAI10527", "24BAI10528", "24BAI10529", "24BAI10530", "24BAI10531", "24BAI10532", "24BAI10533",
-    "24BAI10534", "24BAI10535", "24BAI10536", "24BAI10537", "24BAI10538", "24BAI10539", "24BAI10540", "24BAI10541", "24BAI10542", "24BAI10543",
-    "24BAI10544", "24BAI10545", "24BAI10546", "24BAI10547", "24BAI10548", "24BAI10549", "24BAI10550", "24BAI10551", "24BAI10552", "24BAI10553",
-    "24BAI10554", "24BAI10555", "24BAI10556", "24BAI10557", "24BAI10558", "24BAI10559", "24BAI10560", "23BCE10738", "22BHI10171", "22BCE10564",
-    "24BAI10674", "24BCY10058", "23BAI10790", "24BCE10619", "22BAI10085", "24BAI10621", "23BAI10289", "24BCY10184", "22BSA10231", "22BSA10080",
-    "24BAI10345", "23BCE10570", "23BAI10429", "22BCE11621", "22BCE11344", "22MEI10015", "23BAI10755", "23MIP10100", "24MIM10032", "24BCE10767",
-    "23BAI10851", "23BAI10189", "24BCE10411", "24BCY10374", "24BAI10086", "22BCE10363", "22MIM10012", "23BCE10685", "22BCE11100", "24BCE10616",
-    "24MCA10026", "23BAI11407", "24BCE11267", "23BCY10160", "24BSA10210", "24BAI10269", "23BCE11645", "23BCE11696", "24BCG10130", "23BHI10060",
-    "23BAC10005", "23BAI10215", "23BAI11053", "24MIM10063", "22BCY10147", "22BAI10061", "23BAI11122", "24BCE10287", "23BEY10025", "23BCG10117",
-    "24BCY10268", "23BCE10756", "24BCY10313", "23BAI10802", "23BCE11504", "24BCE10456", "24BEC10096", "22BHI10087", "23BAI10521", "24BSA10290",
-    "22BCE10053", "22MIM10038", "24BSA10328", "23BCE11177", "23BAI10100", "24BCY10240", "23BCG10107", "23BCE10702", "24BAI10032", "23BAI10022",
-    "23BCE10266", "23BCE11419", "23BCE11372", "24BSA10013", "23BCE10331", "23BCY10064", "21BHI10078", "23BAI10622", "24BAI10801", "23BCE10143",
-    "23MIM10045", "23BAI10981", "24BSA10305", "23BAI10534", "22MIM10013", "24BCE11199", "23BCE11236", "24BCE10525", "24BCE10027", "23BET10018",
-    "24BEC10127", "23BAI10917", "24BCE11500", "23BAI10255", "22BHI10067", "22BCE11027", "24BCE11099", "23MSI10010", "23MIP10124", "22BCE10281",
-    "24BCE11472", "23BAI10562", "24BEY10070", "22MIP10001", "22BSA10106", "24BSA10306", "23BCE10282", "22BCE11504", "22BET10029", "22BCE11208",
-    "23BAI11017", "23MIP10101", "24BCE10904", "24BCE11274", "23BCG10092", "23BAI10042", "24BCE10079", "24BCE10031", "22BCG10176", "22MIM10029",
-    "23BCE10067", "22BCE10577", "24BCG10120", "24MCA10158", "23BAI10033", "24BCE10823", "23BAI10328", "24BCY10327", "24BCE11084", "23BCE11553",
-    "23BCE10128", "24BAI10816", "23BAI10054", "23BCE11424", "23BAI10346", "23BAI11317", "24BCE11453", "22BCY10227", "22BAI10278", "23BAI10915",
-    "24BEY10149", "23BAI11397", "23BAS10112", "24BCE11420", "23BCE10163", "23MIP10041", "24BCE11077", "24BEC10144", "22BSA10072", "23BAI10668",
-    "24BEC10007", "22BCE11676", "22BOE10021", "24BCE11363", "23BCY10334", "23BCE10355", "23BCE11284", "23BCE10596", "23BCE10196", "23BCE10215",
-    "23BSA10009", "23BCY10270", "24BCE10200", "23BCE11231", "23BAI10314", "21BSA10149", "23BAI10602", "24BCY10065", "23BCE10893", "23MIM10011",
-    "23BAI10988", "23BAI10167", "23BAI11158", "23BCE10328", "24BCE10346", "24BCY10107", "23BCE11357", "24BEY10089", "23BCY10300", "24BCE10594",
-    "23BAI11398", "22BCE11367", "22BAI10129", "24BCE10074", "23BAI10599", "24BAI10668", "22BAI10237", "24BHI10113", "23BCE10305", "24BCE10947",
-    "22BCE10059", "22BCE10594", "24MIM10250", "23MIM10111", "22BCE10327", "22BCE10441", "22BCG10105", "23MIP10104", "24BCE10538", "23BCY10180",
-    "23BAI11213", "24BCE11193", "24BCE11266", "22BCE11457", "22MIM10049", "23BCE10102", "24BSA10317", "23BEY10029", "23BHI10194", "24BOE10053",
-    "23BCY10255", "24BHI10028", "24BCY10359", "23BAI10515", "23BAI10690", "24BCE11416", "23BAI10008", "23MIM10060", "23BCE10791", "24BEC10135",
-    "22BHI10165", "23BCG10052", "24BHI10096", "23BCG10098", "23BSA10157", "23BCE10140", "23MIP10022", "24BCE10413", "22BHI10074", "23BAI10553",
-    "24BCG10151", "22BCE11588", "22MIM10032", "23BAI10253", "23BCY10169", "23BCE10317", "23BCE11655", "23BAI10987", "23BCE10297", "24BCE10567",
-    "24BCE10565", "23BCE10416", "23BCE11143", "21MIP10036", "23BCY10258", "24BSA10334", "23BCE10707", "23BHI10167", "23BEC10084", "23BCE11004",
-    "23BCE11445", "24BCE10226", "24BCY10038", "23BCE10789", "24BCE10070", "23BAC10009", "23BAI10214", "22BCE11109", "24BCY10177", "23MIP10128",
-    "24BCE11102", "22BAI10165", "23BCE10658", "24BEY10058", "22BAI10393", "24BCY10153", "24BCE11415", "22BCE11173", "23MIP10125", "23BAI10306",
-    "24BCE11000", "24BCE11184", "22BCE10381", "22MEI10062", "23BCE10399", "23BCE10337", "24MSI10024", "23BCE10413", "24BCY10218", "23BAI11177",
-    "24BCE10150", "23BAI11359", "23BCY10164", "24BCE11507", "23BSA10076", "23MEI10086", "23BCG10047", "22BCY10188", "23BCE11692", "24BEC10050",
-    "22BAS10073", "22BHI10061", "23BAI11305", "23BAI11135", "23BCE10216", "24BCG10046", "23BCE10472", "23BCE11840", "23BCE10585", "23MIM10082",
-    "24BAI10582", "24BCY10062", "23BET10019", "24BSA10248", "23BSA10102", "23BAI10190", "22BSA10208", "22BCE11314", "23BAI10140", "24BCE10103",
-    "24BAI10278", "23BCE11827", "22BAI10104", '24BCY10096', '24BAI10379', '23BAI11066', '23BCE10409', '23BAI10482', '23BSA10209', '24BCY10268',
-    '22MIM10006', '23BCY10271', '23BAI11077', '24BAI10232', '22BCE11221', '24BEC10039', '22BCE11677', '23MEI10036', '24BCG10082', '22BCE11677',
-    '23BAI10661', '22BSA10080', '24MCA10026', '24BCE11208', '24BSA10068', '22BCE11100', '24BSA10240', '24BCE10069', '22BAI10187', '23BCG10110',
-    '24BCE10004', '23BCE10479', '23BCE10122', '24BCE11399', '23BCE10570', '23BCE11635', '22BCE11344', '22BCE10564', '23BCE11372', '23BCE10725',
-    '23BCE10283', '24BSA10053', '22BAI10187', '23MIM10049', '24BCE10977', '23BAI10344', '22BSA10231', '24BCG10060', '23BCE11724', '23BAI10429',
-    '24BCE11267', '23MIP10111', '24BHI10012', '23MIP10093', '22BCE11621', '24BMR10013', '23BAI10289', '24BAI10345', '23BAI10215', '24BSA10101',
-    '22BAI10059', '23BCE11564', '22BCY10142', '23BCE11526', '24BCE11371', '23BCE10461', '24BCE10401', '24BCY10073', '22BHI10053', '23BAI10337',
-    '24BSA10343', '23BAI10334', '24BCE10619', '23BAI10156', '22BCE10092', '23BAI11053', '23BAI10156', '24BSA10343', '24BCY10184', '23BCE11395',
-    '24BAI10674', '24BCG10020', '23BAI10537', '23BCE10738', '24BCY10058', '24BCE10456', '23BCE10925', '21BHI10087', '24BSA10063', '24BAI10156',
-    '23BAI10790', '23BHI10142', '23BEY10037', '24BAI10560', '22MEI10015', '22BAI10085', '23BAI10858', '22BHI10171', '23BHI10101', '22BHI10171',
-    '23BSA10133', '24BAI10621'
-];
+            "24BAI10484", "24BAI10485", "24BAI10486", "24BAI10487", "24BAI10488", "24BAI10489", "24BAI10490", "24BAI10491", "24BAI10492", "24BAI10493",
+            "24BAI10494", "24BAI10495", "24BAI10496", "24BAI10497", "24BAI10498", "24BAI10499", "24BAI10500", "24BAI10501", "24BAI10502", "24BAI10503",
+            "24BAI10504", "24BAI10505", "24BAI10506", "24BAI10507", "24BAI10508", "24BAI10509", "24BAI10510", "24BAI10511", "24BAI10512", "24BAI10513",
+            "24BAI10514", "24BAI10515", "24BAI10516", "24BAI10517", "24BAI10518", "24BAI10519", "24BAI10520", "24BAI10521", "24BAI10522", "24BAI10523",
+            "24BAI10524", "24BAI10525", "24BAI10526", "24BAI10527", "24BAI10528", "24BAI10529", "24BAI10530", "24BAI10531", "24BAI10532", "24BAI10533",
+            "24BAI10534", "24BAI10535", "24BAI10536", "24BAI10537", "24BAI10538", "24BAI10539", "24BAI10540", "24BAI10541", "24BAI10542", "24BAI10543",
+            "24BAI10544", "24BAI10545", "24BAI10546", "24BAI10547", "24BAI10548", "24BAI10549", "24BAI10550", "24BAI10551", "24BAI10552", "24BAI10553",
+            "24BAI10554", "24BAI10555", "24BAI10556", "24BAI10557", "24BAI10558", "24BAI10559", "24BAI10560", "23BCE10738", "22BHI10171", "22BCE10564",
+            "24BAI10674", "24BCY10058", "23BAI10790", "24BCE10619", "22BAI10085", "24BAI10621", "23BAI10289", "24BCY10184", "22BSA10231", "22BSA10080",
+            "24BAI10345", "23BCE10570", "23BAI10429", "22BCE11621", "22BCE11344", "22MEI10015", "23BAI10755", "23MIP10100", "24MIM10032", "24BCE10767",
+            "23BAI10851", "23BAI10189", "24BCE10411", "24BCY10374", "24BAI10086", "22BCE10363", "22MIM10012", "23BCE10685", "22BCE11100", "24BCE10616",
+            "24MCA10026", "23BAI11407", "24BCE11267", "23BCY10160", "24BSA10210", "24BAI10269", "23BCE11645", "23BCE11696", "24BCG10130", "23BHI10060",
+            "23BAC10005", "23BAI10215", "23BAI11053", "24MIM10063", "22BCY10147", "22BAI10061", "23BAI11122", "24BCE10287", "23BEY10025", "23BCG10117",
+            "24BCY10268", "23BCE10756", "24BCY10313", "23BAI10802", "23BCE11504", "24BCE10456", "24BEC10096", "22BHI10087", "23BAI10521", "24BSA10290",
+            "22BCE10053", "22MIM10038", "24BSA10328", "23BCE11177", "23BAI10100", "24BCY10240", "23BCG10107", "23BCE10702", "24BAI10032", "23BAI10022",
+            "23BCE10266", "23BCE11419", "23BCE11372", "24BSA10013", "23BCE10331", "23BCY10064", "21BHI10078", "23BAI10622", "24BAI10801", "23BCE10143",
+            "23MIM10045", "23BAI10981", "24BSA10305", "23BAI10534", "22MIM10013", "24BCE11199", "23BCE11236", "24BCE10525", "24BCE10027", "23BET10018",
+            "24BEC10127", "23BAI10917", "24BCE11500", "23BAI10255", "22BHI10067", "22BCE11027", "24BCE11099", "23MSI10010", "23MIP10124", "22BCE10281",
+            "24BCE11472", "23BAI10562", "24BEY10070", "22MIP10001", "22BSA10106", "24BSA10306", "23BCE10282", "22BCE11504", "22BET10029", "22BCE11208",
+            "23BAI11017", "23MIP10101", "24BCE10904", "24BCE11274", "23BCG10092", "23BAI10042", "24BCE10079", "24BCE10031", "22BCG10176", "22MIM10029",
+            "23BCE10067", "22BCE10577", "24BCG10120", "24MCA10158", "23BAI10033", "24BCE10823", "23BAI10328", "24BCY10327", "24BCE11084", "23BCE11553",
+            "23BCE10128", "24BAI10816", "23BAI10054", "23BCE11424", "23BAI10346", "23BAI11317", "24BCE11453", "22BCY10227", "22BAI10278", "23BAI10915",
+            "24BEY10149", "23BAI11397", "23BAS10112", "24BCE11420", "23BCE10163", "23MIP10041", "24BCE11077", "24BEC10144", "22BSA10072", "23BAI10668",
+            "24BEC10007", "22BCE11676", "22BOE10021", "24BCE11363", "23BCY10334", "23BCE10355", "23BCE11284", "23BCE10596", "23BCE10196", "23BCE10215",
+            "23BSA10009", "23BCY10270", "24BCE10200", "23BCE11231", "23BAI10314", "21BSA10149", "23BAI10602", "24BCY10065", "23BCE10893", "23MIM10011",
+            "23BAI10988", "23BAI10167", "23BAI11158", "23BCE10328", "24BCE10346", "24BCY10107", "23BCE11357", "24BEY10089", "23BCY10300", "24BCE10594",
+            "23BAI11398", "22BCE11367", "22BAI10129", "24BCE10074", "23BAI10599", "24BAI10668", "22BAI10237", "24BHI10113", "23BCE10305", "24BCE10947",
+            "22BCE10059", "22BCE10594", "24MIM10250", "23MIM10111", "22BCE10327", "22BCE10441", "22BCG10105", "23MIP10104", "24BCE10538", "23BCY10180",
+            "23BAI11213", "24BCE11193", "24BCE11266", "22BCE11457", "22MIM10049", "23BCE10102", "24BSA10317", "23BEY10029", "23BHI10194", "24BOE10053",
+            "23BCY10255", "24BHI10028", "24BCY10359", "23BAI10515", "23BAI10690", "24BCE11416", "23BAI10008", "23MIM10060", "23BCE10791", "24BEC10135",
+            "22BHI10165", "23BCG10052", "24BHI10096", "23BCG10098", "23BSA10157", "23BCE10140", "23MIP10022", "24BCE10413", "22BHI10074", "23BAI10553",
+            "24BCG10151", "22BCE11588", "22MIM10032", "23BAI10253", "23BCY10169", "23BCE10317", "23BCE11655", "23BAI10987", "23BCE10297", "24BCE10567",
+            "24BCE10565", "23BCE10416", "23BCE11143", "21MIP10036", "23BCY10258", "24BSA10334", "23BCE10707", "23BHI10167", "23BEC10084", "23BCE11004",
+            "23BCE11445", "24BCE10226", "24BCY10038", "23BCE10789", "24BCE10070", "23BAC10009", "23BAI10214", "22BCE11109", "24BCY10177", "23MIP10128",
+            "24BCE11102", "22BAI10165", "23BCE10658", "24BEY10058", "22BAI10393", "24BCY10153", "24BCE11415", "22BCE11173", "23MIP10125", "23BAI10306",
+            "24BCE11000", "24BCE11184", "22BCE10381", "22MEI10062", "23BCE10399", "23BCE10337", "24MSI10024", "23BCE10413", "24BCY10218", "23BAI11177",
+            "24BCE10150", "23BAI11359", "23BCY10164", "24BCE11507", "23BSA10076", "23MEI10086", "23BCG10047", "22BCY10188", "23BCE11692", "24BEC10050",
+            "22BAS10073", "22BHI10061", "23BAI11305", "23BAI11135", "23BCE10216", "24BCG10046", "23BCE10472", "23BCE11840", "23BCE10585", "23MIM10082",
+            "24BAI10582", "24BCY10062", "23BET10019", "24BSA10248", "23BSA10102", "23BAI10190", "22BSA10208", "22BCE11314", "23BAI10140", "24BCE10103",
+            "24BAI10278", "23BCE11827", "22BAI10104", '24BCY10096', '24BAI10379', '23BAI11066', '23BCE10409', '23BAI10482', '23BSA10209', '24BCY10268',
+            '22MIM10006', '23BCY10271', '23BAI11077', '24BAI10232', '22BCE11221', '24BEC10039', '22BCE11677', '23MEI10036', '24BCG10082', '22BCE11677',
+            '23BAI10661', '22BSA10080', '24MCA10026', '24BCE11208', '24BSA10068', '22BCE11100', '24BSA10240', '24BCE10069', '22BAI10187', '23BCG10110',
+            '24BCE10004', '23BCE10479', '23BCE10122', '24BCE11399', '23BCE10570', '23BCE11635', '22BCE11344', '22BCE10564', '23BCE11372', '23BCE10725',
+            '23BCE10283', '24BSA10053', '22BAI10187', '23MIM10049', '24BCE10977', '23BAI10344', '22BSA10231', '24BCG10060', '23BCE11724', '23BAI10429',
+            '24BCE11267', '23MIP10111', '24BHI10012', '23MIP10093', '22BCE11621', '24BMR10013', '23BAI10289', '24BAI10345', '23BAI10215', '24BSA10101',
+            '22BAI10059', '23BCE11564', '22BCY10142', '23BCE11526', '24BCE11371', '23BCE10461', '24BCE10401', '24BCY10073', '22BHI10053', '23BAI10337',
+            '24BSA10343', '23BAI10334', '24BCE10619', '23BAI10156', '22BCE10092', '23BAI11053', '23BAI10156', '24BSA10343', '24BCY10184', '23BCE11395',
+            '24BAI10674', '24BCG10020', '23BAI10537', '23BCE10738', '24BCY10058', '24BCE10456', '23BCE10925', '21BHI10087', '24BSA10063', '24BAI10156',
+            '23BAI10790', '23BHI10142', '23BEY10037', '24BAI10560', '22MEI10015', '22BAI10085', '23BAI10858', '22BHI10171', '23BHI10101', '22BHI10171',
+            '23BSA10133', '24BAI10621'
+        ];
 
         // You can change this to your actual event URL
-        const eventUrl = "https://docs.google.com/forms/d/e/1FAIpQLSeBI_ojXb927O5h4uleeklXQfYbk-irl6zMzNLHFxeXoYDFRg/viewform ";
+        const eventUrl = "https://docs.google.com/forms/d/e/1FAIpQLSeBI_ojXb927O5h4uleeklXQfYbk-irl6zMzNLHFxeXoYDFRg/viewform";
 
         // --- Element References ---
         const formContainer = document.getElementById('formContainer');
         const certificateContainer = document.getElementById('certificateContainer');
-        const hackerContainer = document.getElementById('hackerContainer');
         const certificateForm = document.getElementById('certificateForm');
         const participantNameEl = document.getElementById('participantName');
         const downloadBtn = document.getElementById('downloadBtn');
         const backBtn = document.getElementById('backBtn');
-        const tryAgainBtn = document.getElementById('tryAgainBtn');
         const messageBox = document.getElementById('messageBox');
+        
+        // --- Modal Element References (NEW) ---
+        const eventModalOverlay = document.getElementById('eventModalOverlay');
+        const modalCloseBtn = document.getElementById('modalCloseBtn');
 
         // --- Setup ---
-        // Set the actual links for the event
-        document.querySelector('#hackerContainer img').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(eventUrl)}`;
+        // Set the actual links for the event in the modal
+        document.getElementById('eventQrCode').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(eventUrl)}`;
         document.getElementById('eventLink').href = eventUrl;
-
 
         // --- Functions ---
         function showMessage(message, type = 'success') {
@@ -307,16 +308,14 @@
             const regNo = regNoInput.value.trim();
 
             if (!name || !regNo) {
+                showMessage('Please fill in all fields.', 'error'); // More specific message
                 return;
             }
 
             if (validRegNos.includes(regNo.toUpperCase())) {
-                // VALID: Show the certificate
-                // Format the name for better mobile display
                 const displayText = `${name} (${regNo})`;
                 participantNameEl.textContent = displayText;
                 
-                // Adjust font size if name is too long
                 const textLength = displayText.length;
                 if (textLength > 25) {
                     participantNameEl.style.fontSize = 'clamp(10px, 3vw, 20px)';
@@ -328,13 +327,12 @@
                 
                 formContainer.classList.add('hidden');
                 certificateContainer.classList.remove('hidden');
-                hackerContainer.classList.add('hidden');
                 showMessage('Certificate generated successfully!', 'success');
             } else {
-                // INVALID: Show the hacker challenge
-                formContainer.classList.add('hidden');
-                certificateContainer.classList.add('hidden');
-                hackerContainer.classList.remove('hidden');
+                // --- BEHAVIOR CHANGE ---
+                // Instead of showing a hacker screen, show an error message
+                showMessage('Invalid Registration Number. Please try again.', 'error');
+                regNoInput.focus(); // Help the user correct the input
             }
         }
 
@@ -344,10 +342,8 @@
             const regNo = document.getElementById('regNo').value.trim();
             const filename = `Certificate-${name.replace(/[^a-zA-Z0-9]/g, '_')}-${regNo}.png`;
 
-            // Show loading message
-            showMessage('Generating certificate image...', 'success');
+            showMessage('Preparing your certificate...', 'success');
 
-            // Use higher scale for mobile devices to ensure quality
             const isMobile = window.innerWidth < 768;
             const scale = isMobile ? 4 : 3;
 
@@ -359,46 +355,49 @@
                 height: certificateElement.offsetHeight,
                 logging: false
             })
-                .then(canvas => {
-                    const link = document.createElement('a');
-                    link.download = filename;
-                    link.href = canvas.toDataURL('image/png', 0.9);
-                    
-                    // For mobile devices, try to force download
-                    if (isMobile) {
-                        // Create a temporary click event
-                        const event = new MouseEvent('click', {
-                            view: window,
-                            bubbles: true,
-                            cancelable: true
-                        });
-                        link.dispatchEvent(event);
-                    } else {
-                        link.click();
-                    }
-                    
-                    showMessage('Certificate downloaded successfully!', 'success');
-                })
-                .catch(err => {
-                    console.error('Error generating canvas:', err);
-                    showMessage('Error generating certificate. Please try again.', 'error');
-                });
+            .then(canvas => {
+                const link = document.createElement('a');
+                link.download = filename;
+                link.href = canvas.toDataURL('image/png', 0.9);
+                link.click();
+                
+                // --- NEW ---
+                // Show the event modal after the download is triggered
+                setTimeout(() => {
+                    eventModalOverlay.classList.remove('hidden');
+                }, 500); // Small delay to make it feel smoother
+            })
+            .catch(err => {
+                console.error('Error generating canvas:', err);
+                showMessage('Error downloading certificate. Please try again.', 'error');
+            });
         }
 
         function resetToForm() {
             certificateContainer.classList.add('hidden');
-            hackerContainer.classList.add('hidden');
             formContainer.classList.remove('hidden');
             certificateForm.reset();
-            // Reset the participant name font size
             participantNameEl.style.fontSize = 'clamp(14px, 4vw, 28px)';
+        }
+
+        // --- NEW: Function to close the modal ---
+        function closeModal() {
+            eventModalOverlay.classList.add('hidden');
         }
 
         // --- Event Listeners ---
         certificateForm.addEventListener('submit', handleGenerate);
         downloadBtn.addEventListener('click', handleDownload);
         backBtn.addEventListener('click', resetToForm);
-        tryAgainBtn.addEventListener('click', resetToForm);
+
+        // --- NEW: Event listeners for the modal ---
+        modalCloseBtn.addEventListener('click', closeModal);
+        eventModalOverlay.addEventListener('click', (e) => {
+            // Close the modal if the user clicks on the dark overlay background
+            if (e.target === eventModalOverlay) {
+                closeModal();
+            }
+        });
 
     </script>
 </body>
