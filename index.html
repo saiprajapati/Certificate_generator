@@ -7,7 +7,7 @@
     <title>MERNxAI Certificate Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Mono:wght@400;700&family=Chakra+Petch:wght@700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Mono:wght@400;700&family=Chakra+Petch:wght@700&family=Space+Mono:wght@400;700&family=Poppins:wght@400;700&family=Fira+Code:wght@400;700&display=swap"
         rel="stylesheet">
     <style>
         :root {
@@ -22,10 +22,16 @@
             --accent-border-color: #64ffda;
             --accent-bg-transparent: #64ffda1a;
             --hacker-text-color: #ff0000;
+
+            /* Default fonts - will be overwritten by JS */
+            --body-font: 'Inter', sans-serif;
+            --heading-font: 'Chakra Petch', sans-serif;
+            --title-font: 'Inter', sans-serif;
+            --certificate-font: 'Roboto Mono', monospace;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: var(--body-font);
             background-color: var(--background-color);
             color: var(--text-color-light);
             overflow-x: hidden;
@@ -88,6 +94,7 @@
             border: 1px solid var(--border-color);
             color: var(--text-color-light);
             transition: all 0.2s;
+            font-family: var(--body-font);
         }
 
         input:focus {
@@ -116,7 +123,7 @@
             top: 46%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-family: 'Roboto Mono', monospace;
+            font-family: var(--certificate-font);
             font-weight: 700;
             color: #1e293b;
             text-align: center;
@@ -133,10 +140,24 @@
         #promo h2,
         .modal-content h3,
         .text-green-300 {
-            font-family: 'Chakra Petch', sans-serif;
+            font-family: var(--heading-font);
             text-shadow: 0 0 5px var(--accent-color), 0 0 10px var(--accent-color);
             color: var(--accent-color);
             transition: color 0.5s ease, text-shadow 0.5s ease;
+        }
+
+        .text-slate-200 {
+            color: var(--text-color-light);
+            font-family: var(--title-font);
+        }
+
+        .text-slate-400 {
+            color: var(--text-color-dark);
+            font-family: var(--body-font);
+        }
+
+        .marquee-content {
+            font-family: var(--body-font);
         }
 
         .marquee-content a.text-green-300 {
@@ -146,46 +167,11 @@
         .hacker-text {
             color: var(--hacker-text-color);
             text-shadow: 0 0 5px var(--hacker-text-color), 0 0 10px var(--hacker-text-color);
-        }
-
-        .text-slate-200 {
-            color: var(--text-color-light);
-        }
-
-        .text-slate-300 {
-            color: var(--text-color-light);
-        }
-
-        .text-slate-400 {
-            color: var(--text-color-dark);
+            font-family: var(--heading-font);
         }
 
         .hidden {
             display: none;
-        }
-
-        .message-box {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            color: white;
-            z-index: 100;
-            opacity: 0;
-            transition: opacity 0.5s;
-        }
-
-        .message-box.show {
-            opacity: 1;
-        }
-
-        .message-box.success {
-            background-color: #28a745;
-        }
-
-        .message-box.error {
-            background-color: #dc3545;
         }
 
         /* Marquee Strip */
@@ -203,6 +189,7 @@
             display: inline-block;
             white-space: nowrap;
             padding-left: 100%;
+            /* Change the animation time to a higher value for slower scrolling */
             animation: marquee 20s linear infinite;
         }
 
@@ -266,7 +253,7 @@
         }
 
         .modal-content h3 {
-            font-family: 'Chakra Petch', sans-serif;
+            font-family: var(--heading-font);
             text-shadow: 0 0 5px var(--accent-color), 0 0 10px var(--accent-color);
         }
 
@@ -328,13 +315,6 @@
             }
         }
 
-        @media (min-width: 769px) and (max-width: 1024px) {
-            #participantName {
-                font-size: 22px;
-                width: 75%;
-            }
-        }
-
         @media (min-width: 1025px) {
             #participantName {
                 font-size: 24px;
@@ -345,6 +325,20 @@
 </head>
 
 <body class="flex flex-col min-h-screen p-4">
+
+    <div id="mobileModal" class="modal hidden">
+        <div class="modal-content">
+            <h3 class="text-2xl font-bold mb-4">Desktop Recommended</h3>
+            <p class="text-lg text-slate-300 mb-6">
+                For the best experience and to ensure your certificate is generated correctly,
+                we recommend using a desktop browser.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <button id="closeMobileModalBtn" class="btn py-2 px-6">Proceed Anyway</button>
+                <button id="recheckBtn" class="btn-secondary py-2 px-6">I'll Switch Devices</button>
+            </div>
+        </div>
+    </div>
 
     <div class="marquee-container">
         <div id="marqueeContent" class="marquee-content font-bold text-lg text-slate-300">
@@ -455,64 +449,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
         // --- Configuration ---
-
         const validRegNos = [
-            "24BAI10484", "24BAI10485", "24BAI10486", "24BAI10487", "24BAI10488", "24BAI10489", "24BAI10490", "24BAI10491", "24BAI10492", "24BAI10493",
-            "24BAI10494", "24BAI10495", "24BAI10496", "24BAI10497", "24BAI10498", "24BAI10499", "24BAI10500", "24BAI10501", "24BAI10502", "24BAI10503",
-            "24BAI10504", "24BAI10505", "24BAI10506", "24BAI10507", "24BAI10508", "24BAI10509", "24BAI10510", "24BAI10511", "24BAI10512", "24BAI10513",
-            "24BAI10514", "24BAI10515", "24BAI10516", "24BAI10517", "24BAI10518", "24BAI10519", "24BAI10520", "24BAI10521", "24BAI10522", "24BAI10523",
-            "24BAI10524", "24BAI10525", "24BAI10526", "24BAI10527", "24BAI10528", "24BAI10529", "24BAI10530", "24BAI10531", "24BAI10532", "24BAI10533",
-            "24BAI10534", "24BAI10535", "24BAI10536", "24BAI10537", "24BAI10538", "24BAI10539", "24BAI10540", "24BAI10541", "24BAI10542", "24BAI10543",
-            "24BAI10544", "24BAI10545", "24BAI10546", "24BAI10547", "24BAI10548", "24BAI10549", "24BAI10550", "24BAI10551", "24BAI10552", "24BAI10553",
-            "24BAI10554", "24BAI10555", "24BAI10556", "24BAI10557", "24BAI10558", "24BAI10559", "24BAI10560", "23BCE10738", "22BHI10171", "22BCE10564",
-            "24BAI10674", "24BCY10058", "23BAI10790", "24BCE10619", "22BAI10085", "24BAI10621", "23BAI10289", "24BCY10184", "22BSA10231", "22BSA10080",
-            "24BAI10345", "23BCE10570", "23BAI10429", "22BCE11621", "22BCE11344", "22MEI10015", "23BAI10755", "23MIP10100", "24MIM10032", "24BCE10767",
-            "23BAI10851", "23BAI10189", "24BCE10411", "24BCY10374", "24BAI10086", "22BCE10363", "22MIM10012", "23BCE10685", "22BCE11100", "24BCE10616",
-            "24MCA10026", "23BAI11407", "24BCE11267", "23BCY10160", "24BSA10210", "24BAI10269", "23BCE11645", "23BCE11696", "24BCG10130", "23BHI10060",
-            "23BAC10005", "23BAI10215", "23BAI11053", "24MIM10063", "22BCY10147", "22BAI10061", "23BAI11122", "24BCE10287", "23BEY10025", "23BCG10117",
-            "24BCY10268", "23BCE10756", "24BCY10313", "23BAI10802", "23BCE11504", "24BCE10456", "24BEC10096", "22BHI10087", "23BAI10521", "24BSA10290",
-            "22BCE10053", "22MIM10038", "24BSA10328", "23BCE11177", "23BAI10100", "24BCY10240", "23BCG10107", "23BCE10702", "24BAI10032", "23BAI10022",
-            "23BCE10266", "23BCE11419", "23BCE11372", "24BSA10013", "23BCE10331", "23BCY10064", "21BHI10078", "23BAI10622", "24BAI10801", "23BCE10143",
-            "23MIM10045", "23BAI10981", "24BSA10305", "23BAI10534", "22MIM10013", "24BCE11199", "23BCE11236", "24BCE10525", "24BCE10027", "23BET10018",
-            "24BEC10127", "23BAI10917", "24BCE11500", "23BAI10255", "22BHI10067", "22BCE11027", "24BCE11099", "23MSI10010", "23MIP10124", "22BCE10281",
-            "24BCE11472", "23BAI10562", "24BEY10070", "22MIP10001", "22BSA10106", "24BSA10306", "23BCE10282", "22BCE11504", "22BET10029", "22BCE11208",
-            "23BAI11017", "23MIP10101", "24BCE10904", "24BCE11274", "23BCG10092", "23BAI10042", "24BCE10079", "24BCE10031", "22BCG10176", "22MIM10029",
-            "23BCE10067", "22BCE10577", "24BCG10120", "24MCA10158", "23BAI10033", "24BCE10823", "23BAI10328", "24BCY10327", "24BCE11084", "23BCE11553",
-            "23BCE10128", "24BAI10816", "23BAI10054", "23BCE11424", "23BAI10346", "23BAI11317", "24BCE11453", "22BCY10227", "22BAI10278", "23BAI10915",
-            "24BEY10149", "23BAI11397", "23BAS10112", "24BCE11420", "23BCE10163", "23MIP10041", "24BCE11077", "24BEC10144", "22BSA10072", "23BAI10668",
-            "24BEC10007", "22BCE11676", "22BOE10021", "24BCE11363", "23BCY10334", "23BCE10355", "23BCE11284", "23BCE10596", "23BCE10196", "23BCE10215",
-            "23BSA10009", "23BCY10270", "24BCE10200", "23BCE11231", "23BAI10314", "21BSA10149", "23BAI10602", "24BCY10065", "23BCE10893", "23MIM10011",
-            "23BAI10988", "23BAI10167", "23BAI11158", "23BCE10328", "24BCE10346", "24BCY10107", "23BCE11357", "24BEY10089", "23BCY10300", "24BCE10594",
-            "23BAI11398", "22BCE11367", "22BAI10129", "24BCE10074", "23BAI10599", "24BAI10668", "22BAI10237", "24BHI10113", "23BCE10305", "24BCE10947",
-            "22BCE10059", "22BCE10594", "24MIM10250", "23MIM10111", "22BCE10327", "22BCE10441", "22BCG10105", "23MIP10104", "24BCE10538", "23BCY10180",
-            "23BAI11213", "24BCE11193", "24BCE11266", "22BCE11457", "22MIM10049", "23BCE10102", "24BSA10317", "23BEY10029", "23BHI10194", "24BOE10053",
-            "23BCY10255", "24BHI10028", "24BCY10359", "23BAI10515", "23BAI10690", "24BCE11416", "23BAI10008", "23MIM10060", "23BCE10791", "24BEC10135",
-            "22BHI10165", "23BCG10052", "24BHI10096", "23BCG10098", "23BSA10157", "23BCE10140", "23MIP10022", "24BCE10413", "22BHI10074", "23BAI10553",
-            "24BCG10151", "22BCE11588", "22MIM10032", "23BAI10253", "23BCY10169", "23BCE10317", "23BCE11655", "23BAI10987", "23BCE10297", "24BCE10567",
-            "24BCE10565", "23BCE10416", "23BCE11143", "21MIP10036", "23BCY10258", "24BSA10334", "23BCE10707", "23BHI10167", "23BEC10084", "23BCE11004",
-            "23BCE11445", "24BCE10226", "24BCY10038", "23BCE10789", "24BCE10070", "23BAC10009", "23BAI10214", "22BCE11109", "24BCY10177", "23MIP10128",
-            "24BCE11102", "22BAI10165", "23BCE10658", "24BEY10058", "22BAI10393", "24BCY10153", "24BCE11415", "22BCE11173", "23MIP10125", "23BAI10306",
-            "24BCE11000", "24BCE11184", "22BCE10381", "22MEI10062", "23BCE10399", "23BCE10337", "24MSI10024", "23BCE10413", "24BCY10218", "23BAI11177",
-            "24BCE10150", "23BAI11359", "23BCY10164", "24BCE11507", "23BSA10076", "23MEI10086", "23BCG10047", "22BCY10188", "23BCE11692", "24BEC10050",
-            "22BAS10073", "22BHI10061", "23BAI11305", "23BAI11135", "23BCE10216", "24BCG10046", "23BCE10472", "23BCE11840", "23BCE10585", "23MIM10082",
-            "24BAI10582", "24BCY10062", "23BET10019", "24BSA10248", "23BSA10102", "23BAI10190", "22BSA10208", "22BCE11314", "23BAI10140", "24BCE10103",
-            "24BAI10278", "23BCE11827", "22BAI10104", '24BCY10096', '24BAI10379', '23BAI11066', '23BCE10409', '23BAI10482', '23BSA10209', '24BCY10268',
-            '22MIM10006', '23BCY10271', '23BAI11077', '24BAI10232', '22BCE11221', '24BEC10039', '22BCE11677', '23MEI10036', '24BCG10082', '22BCE11677',
-            '23BAI10661', '22BSA10080', '24MCA10026', '24BCE11208', '24BSA10068', '22BCE11100', '24BSA10240', '24BCE10069', '22BAI10187', '23BCG10110',
-            '24BCE10004', '23BCE10479', '23BCE10122', '24BCE11399', '23BCE10570', '23BCE11635', '22BCE11344', '22BCE10564', '23BCE11372', '23BCE10725',
-            '23BCE10283', '24BSA10053', '22BAI10187', '23MIM10049', '24BCE10977', '23BAI10344', '22BSA10231', '24BCG10060', '23BCE11724', '23BAI10429',
-            '24BCE11267', '23MIP10111', '24BHI10012', '23MIP10093', '22BCE11621', '24BMR10013', '23BAI10289', '24BAI10345', '23BAI10215', '24BSA10101',
-            '22BAI10059', '23BCE11564', '22BCY10142', '23BCE11526', '24BCE11371', '23BCE10461', '24BCE10401', '24BCY10073', '22BHI10053', '23BAI10337',
-            '24BSA10343', '23BAI10334', '24BCE10619', '23BAI10156', '22BCE10092', '23BAI11053', '23BAI10156', '24BSA10343', '24BCY10184', '23BCE11395',
-            '24BAI10674', '24BCG10020', '23BAI10537', '23BCE10738', '24BCY10058', '24BCE10456', '23BCE10925', '21BHI10087', '24BSA10063', '24BAI10156',
-            '23BAI10790', '23BHI10142', '23BEY10037', '24BAI10560', '22MEI10015', '22BAI10085', '23BAI10858', '22BHI10171', '23BHI10101', '22BHI10171',
-            '23BSA10133', '24BAI10621'
+            "24BAI10484", "24BAI10485", "24BAI10486", "24BAI10487", "24BAI10488", "24BAI10489", "24BAI10490", "24BAI10491", "24BAI10492", "24BAI10493", "24BAI10494", "24BAI10495", "24BAI10496", "24BAI10497", "24BAI10498", "24BAI10499", "24BAI10500", "24BAI10501", "24BAI10502", "24BAI10503", "24BAI10504", "24BAI10505", "24BAI10506", "24BAI10507", "24BAI10508", "24BAI10509", "24BAI10510", "24BAI10511", "24BAI10512", "24BAI10513", "24BAI10514", "24BAI10515", "24BAI10516", "24BAI10517", "24BAI10518", "24BAI10519", "24BAI10520", "24BAI10521", "24BAI10522", "24BAI10523", "24BAI10524", "24BAI10525", "24BAI10526", "24BAI10527", "24BAI10528", "24BAI10529", "24BAI10530", "24BAI10531", "24BAI10532", "24BAI10533", "24BAI10534", "24BAI10535", "24BAI10536", "24BAI10537", "24BAI10538", "24BAI10539", "24BAI10540", "24BAI10541", "24BAI10542", "24BAI10543", "24BAI10544", "24BAI10545", "24BAI10546", "24BAI10547", "24BAI10548", "24BAI10549", "24BAI10550", "24BAI10551", "24BAI10552", "24BAI10553", "24BAI10554", "24BAI10555", "24BAI10556", "24BAI10557", "24BAI10558", "24BAI10559", "24BAI10560", "23BCE10738", "22BHI10171", "22BCE10564", "24BAI10674", "24BCY10058", "23BAI10790", "24BCE10619", "22BAI10085", "24BAI10621", "23BAI10289", "24BCY10184", "22BSA10231", "22BSA10080", "24BAI10345", "23BCE10570", "23BAI10429", "22BCE11621", "22BCE11344", "22MEI10015", "23BAI10755", "23MIP10100", "24MIM10032", "24BCE10767", "23BAI10851", "23BAI10189", "24BCE10411", "24BCY10374", "24BAI10086", "22BCE10363", "22MIM10012", "23BCE10685", "22BCE11100", "24BCE10616", "24MCA10026", "23BAI11407", "24BCE11267", "23BCY10160", "24BSA10210", "24BAI10269", "23BCE11645", "23BCE11696", "24BCG10130", "23BHI10060", "23BAC10005", "23BAI10215", "23BAI11053", "24MIM10063", "22BCY10147", "22BAI10061", "23BAI11122", "24BCE10287", "23BEY10025", "23BCG10117", "24BCY10268", "23BCE10756", "24BCY10313", "23BAI10802", "23BCE11504", "24BCE10456", "24BEC10096", "22BHI10087", "23BAI10521", "24BSA10290", "22BCE10053", "22MIM10038", "24BSA10328", "23BCE11177", "23BAI10100", "24BCY10240", "23BCG10107", "23BCE10702", "24BAI10032", "23BAI10022", "23BCE10266", "23BCE11419", "23BCE11372", "24BSA10013", "23BCE10331", "23BCY10064", "21BHI10078", "23BAI10622", "24BAI10801", "23BCE10143", "23MIM10045", "23BAI10981", "24BSA10305", "23BAI10534", "22MIM10013", "24BCE11199", "23BCE11236", "24BCE10525", "24BCE10027", "23BET10018", "24BEC10127", "23BAI10917", "24BCE11500", "23BAI10255", "22BHI10067", "22BCE11027", "24BCE11099", "23MSI10010", "23MIP10124", "22BCE10281", "24BCE11472", "23BAI10562", "24BEY10070", "22MIP10001", "22BSA10106", "24BSA10306", "23BCE10282", "22BCE11504", "22BET10029", "22BCE11208", "23BAI11017", "23MIP10101", "24BCE10904", "24BCE11274", "23BCG10092", "23BAI10042", "24BCE10079", "24BCE10031", "22BCG10176", "22MIM10029", "23BCE10067", "22BCE10577", "24BCG10120", "24MCA10158", "23BAI10033", "24BCE10823", "23BAI10328", "24BCY10327", "24BCE11084", "23BCE11553", "23BCE10128", "24BAI10816", "23BAI10054", "23BCE11424", "23BAI10346", "23BAI11317", "24BCE11453", "22BCY10227", "22BAI10278", "23BAI10915", "24BEY10149", "23BAI11397", "23BAS10112", "24BCE11420", "23BCE10163", "23MIP10041", "24BCE11077", "24BEC10144", "22BSA10072", "23BAI10668", "24BEC10007", "22BCE11676", "22BOE10021", "24BCE11363", "23BCY10334", "23BCE10355", "23BCE11284", "23BCE10596", "23BCE10196", "23BCE10215", "23BSA10009", "23BCY10270", "24BCE10200", "23BCE11231", "23BAI10314", "21BSA10149", "23BAI10602", "24BCY10065", "23BCE10893", "23MIM10011", "23BAI10988", "23BAI10167", "23BAI11158", "23BCE10328", "24BCE10346", "24BCY10107", "23BCE11357", "24BEY10089", "23BCY10300", "24BCE10594", "23BAI11398", "22BCE11367", "22BAI10129", "24BCE10074", "23BAI10599", "24BAI10668", "22BAI10237", "24BHI10113", "23BCE10305", "24BCE10947", "22BCE10059", "22BCE10594", "24MIM10250", "23MIM10111", "22BCE10327", "22BCE10441", "22BCG10105", "23MIP10104", "24BCE10538", "23BCY10180", "23BAI11213", "24BCE11193", "24BCE11266", "22BCE11457", "22MIM10049", "23BCE10102", "24BSA10317", "23BEY10029", "23BHI10194", "24BOE10053", "23BCY10255", "24BHI10028", "24BCY10359", "23BAI10515", "23BAI10690", "24BCE11416", "23BAI10008", "23MIM10060", "23BCE10791", "24BEC10135", "22BHI10165", "23BCG10052", "24BHI10096", "23BCG10098", "23BSA10157", "23BCE10140", "23MIP10022", "24BCE10413", "22BHI10074", "23BAI10553", "24BCG10151", "22BCE11588", "22MIM10032", "23BAI10253", "23BCY10169", "23BCE10317", "23BCE11655", "23BAI10987", "23BCE10297", "24BCE10567", "24BCE10565", "23BCE10416", "23BCE11143", "21MIP10036", "23BCY10258", "24BSA10334", "23BCE10707", "23BHI10167", "23BEC10084", "23BCE11004", "23BCE11445", "24BCE10226", "24BCY10038", "23BCE10789", "24BCE10070", "23BAC10009", "23BAI10214", "22BCE11109", "24BCY10177", "23MIP10128", "24BCE11102", "22BAI10165", "23BCE10658", "24BEY10058", "22BAI10393", "24BCY10153", "24BCE11415", "22BCE11173", "23MIP10125", "23BAI10306", "24BCE11000", "24BCE11184", "22BCE10381", "22MEI10062", "23BCE10399", "23BCE10337", "24MSI10024", "23BCE10413", "24BCY10218", "23BAI11177", "24BCE10150", "23BAI11359", "23BCY10164", "24BCE11507", "23BSA10076", "23MEI10086", "23BCG10047", "22BCY10188", "23BCE11692", "24BEC10050", "22BAS10073", "22BHI10061", "23BAI11305", "23BAI11135", "23BCE10216", "24BCG10046", "23BCE10472", "23BCE11840", "23BCE10585", "23MIM10082", "24BAI10582", "24BCY10062", "23BET10019", "24BSA10248", "23BSA10102", "23BAI10190", "22BSA10208", "22BCE11314", "23BAI10140", "24BCE10103", "24BAI10278", "23BCE11827", "22BAI10104"
         ];
-
-
         const eventUrl = "https://docs.google.com/forms/d/e/1FAIpQLSeBI_ojXb927O5h4uleeklXQfYbk-irl6zMzNLHFxeXoYDFRg/viewform ";
 
-        // New color palettes
         const colorPalettes = [
             // Dark Blue & Teal (Original)
             {
@@ -581,6 +522,16 @@
             }
         ];
 
+        const fontPalettes = [
+            // Original combination
+            {
+                '--body-font': `'Inter', sans-serif`,
+                '--heading-font': `'Chakra Petch', sans-serif`,
+                '--title-font': `'Inter', sans-serif`,
+                '--certificate-font': `'Roboto Mono', monospace`,
+            }
+        ];
+
         // New marquee content combinations
         const marqueeContent = [
             `
@@ -603,18 +554,29 @@
             `
         ];
 
+        // This function will change colors and fonts for the whole site
         function applyRandomPalette() {
-            const randomPaletteIndex = Math.floor(Math.random() * colorPalettes.length);
-            const randomContentIndex = Math.floor(Math.random() * marqueeContent.length);
+            const randomColorIndex = Math.floor(Math.random() * colorPalettes.length);
+            const randomFontIndex = Math.floor(Math.random() * fontPalettes.length);
 
-            const palette = colorPalettes[randomPaletteIndex];
-            const content = marqueeContent[randomContentIndex];
+            const colorPalette = colorPalettes[randomColorIndex];
+            const fontPalette = fontPalettes[randomFontIndex];
 
             const root = document.documentElement;
-            for (const [key, value] of Object.entries(palette)) {
+            // Apply colors
+            for (const [key, value] of Object.entries(colorPalette)) {
                 root.style.setProperty(key, value);
             }
+            // Apply fonts
+            for (const [key, value] of Object.entries(fontPalette)) {
+                root.style.setProperty(key, value);
+            }
+        }
 
+        // This function will change the content of the marquee strip only
+        function updateMarqueeContent() {
+            const randomContentIndex = Math.floor(Math.random() * marqueeContent.length);
+            const content = marqueeContent[randomContentIndex];
             const marquee = document.getElementById('marqueeContent');
             if (marquee) {
                 marquee.innerHTML = content;
@@ -634,6 +596,11 @@
         const promoEl = document.getElementById('promo');
         const promoModal = document.getElementById('promoModal');
         const modalCloseBtn = document.querySelector('.modal-close');
+
+        // --- New Mobile Modal Elements ---
+        const mobileModal = document.getElementById('mobileModal');
+        const closeMobileModalBtn = document.getElementById('closeMobileModalBtn');
+        const recheckBtn = document.getElementById('recheckBtn');
 
         // --- Setup ---
         const hackerQRImg = document.querySelector('#hackerContainer img');
@@ -664,13 +631,13 @@
             const nameInput = document.getElementById('name');
             const regNoInput = document.getElementById('regNo');
             const name = nameInput.value.trim();
-            const regNo = regNoInput.value.trim();
+            const regNo = regNoInput.value.trim().toUpperCase();
 
             if (!name || !regNo) {
                 return;
             }
 
-            if (validRegNos.includes(regNo.toUpperCase())) {
+            if (validRegNos.includes(regNo)) {
                 const displayText = `${name} (${regNo})`;
                 participantNameEl.textContent = displayText;
 
@@ -751,6 +718,23 @@
             participantNameEl.style.fontSize = 'clamp(14px, 4vw, 28px)';
         }
 
+        // --- Mobile Modal Logic ---
+        function checkDevice() {
+            const isMobile = window.innerWidth < 768; // You can adjust this threshold
+            if (isMobile) {
+                mobileModal.classList.remove('hidden');
+                mobileModal.classList.add('show');
+            } else {
+                mobileModal.classList.add('hidden');
+                mobileModal.classList.remove('show');
+            }
+        }
+
+        function closeMobileModal() {
+            mobileModal.classList.remove('show');
+            mobileModal.classList.add('hidden');
+        }
+
         // --- Event Listeners ---
         certificateForm.addEventListener('submit', handleGenerate);
         downloadBtn.addEventListener('click', handleDownload);
@@ -769,11 +753,25 @@
             }
         });
 
+        // Mobile Modal Button Listeners
+        closeMobileModalBtn.addEventListener('click', closeMobileModal);
+        recheckBtn.addEventListener('click', () => {
+            closeMobileModal();
+            location.reload(); // Reloads the page to re-run the check
+        });
+
         // --- Apply a random palette and marquee content when the page loads ---
         document.addEventListener('DOMContentLoaded', () => {
+            // Check for mobile device on load
+            checkDevice();
+
+            // Initial run on page load
             applyRandomPalette();
-            // Start the interval for changing palette and text every 3 seconds
-            setInterval(applyRandomPalette, 3000);
+            updateMarqueeContent();
+
+            // Set up separate intervals for each task
+            setInterval(applyRandomPalette, 3000); // Main site colors change every 3 seconds
+            setInterval(updateMarqueeContent, 20000); // Marquee content changes every 20 seconds
         });
     </script>
 </body>
